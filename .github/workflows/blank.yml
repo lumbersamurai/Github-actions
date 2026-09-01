@@ -26,6 +26,7 @@ jobs:
       #Se establece región y la cuenta la cual es de desarrollador
       region: us-east-1
       account_id: development
+      USER_PASS: ${{ secrets.password }}
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -70,3 +71,12 @@ jobs:
 
       - name: Debug del payload completo
         run: echo "${{toJSON(github.event)}}"
+
+      - name: Validar credenciales
+        if: env.USER_PASS != ''
+        run: |
+          echo "Estado: Credenciales de usuario y contraseña configuradas correctamente"
+
+      - name: Referencias a var global
+        run: |
+          echo "Version del proyecto: ${{ vars.PROJECT_VERSION }}"
