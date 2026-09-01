@@ -48,6 +48,6 @@ jobs:
 
       - name: Auditoria de variables de entorno
         run: |
-          echoi "Plataforma de despliegue: ${{ env.platform }}
-          echo "Región de despliegue: ${{ env.region }}
+          echo "Plataforma de despliegue: ${{ env.platform }}"
+          echo "Región de despliegue: ${{ env.region }}"
           echo "Cuenta de despliegue: ${{ env.account_id }}"
