@@ -19,11 +19,18 @@ jobs:
   build:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
+    #Se configuran las variables de entorno para el job
+    env:
+      #Se determina que sera para AWS
+      platform: aws
+      #Se establece región y la cuenta la cual es de desarrollador
+      region: us-east-1
+      account_id: development
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v5                           
 
       # Runs a single command using the runners shell
       - name: Run a one-line script
@@ -38,3 +45,9 @@ jobs:
       #Run un mensaje inicial
       - name: Mostrar mensaje inicial
         run: echo "Hola mundo y hola tonotos"
+
+      - name: Auditoria de variables de entorno
+        run: |
+          echoi "Plataforma de despliegue: ${{ env.platform }}
+          echo "Región de despliegue: ${{ env.region }}
+          echo "Cuenta de despliegue: ${{ env.account_id }}"
