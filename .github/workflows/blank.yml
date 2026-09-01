@@ -4,40 +4,32 @@ name: CI
 
 # Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events but only for the "main" branch
   push:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
-
-  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
   build:
-    # The type of runner that the job will run on
     runs-on: ubuntu-latest
-    #Se configuran las variables de entorno para el job
+    #variables de entorno del job
     env:
-      #Se determina que sera para AWS
+      #va a ser para aws
       platform: aws
-      #Se establece región y la cuenta la cual es de desarrollador
+      #la region y la cuenta que es de dev
       region: us-east-1
       account_id: development
-      USER_PASS: ${{ secrets.password }}
+      #password aqui para que el if de abajo lo pueda leer
+      USER_PASS: ${{ secrets.PROJECT_PASSWORD }}
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v5                           
+      # Cambiado a v5
+      - uses: actions/checkout@v5                       
 
-      # Runs a single command using the runners shell
       - name: Run a one-line script
         run: echo Hello, world!
 
-      # Runs a set of commands using the runners shell
       - name: Run a multi-line script
         run: |
           echo Add other actions to build,
@@ -47,36 +39,41 @@ jobs:
       - name: Mostrar mensaje inicial
         run: echo "Hola mundo y hola tonotos"
 
-      #Run de mensajes para las variables de entorno
+      #Run de laas var de entorno
       - name: Auditoria de variables de entorno
         run: |
           echo "Plataforma de despliegue: ${{ env.platform }}"
           echo "Región de despliegue: ${{ env.region }}"
           echo "Cuenta de despliegue: ${{ env.account_id }}"
-      
-      #Run de pasos condicinales para AWS
+
+      #solo corre si es aws
       - name: Paso solo para AWS
         if: env.platform == 'aws'
         run: echo "Este paso solo se ejecuta si la plataforma es AWS"
 
-      #Run de pasos para Azure
+      #este nunca deberia correr xq platform siempre es aws
       - name: Paso solo para Azure
         if: env.platform == 'azure'
         run: echo "Este paso solo se ejecuta si la plataforma es Azure"
 
+      #quien ejecuto y en que repo
       - name: Show Metadatos Basicos
         run: |
           echo "Usuuario ejecutor: ${{ github.actor }}"
           echo "Repo activo: ${{ github.repository }}"
 
+      # (Omitiendo los pasos anteriores por brevedad)
+      #esto tira todo el json del evento para debuguear
       - name: Debug del payload completo
-        run: echo "${{toJSON(github.event)}}"
+        run: echo "${{ toJSON(github.event) }}"
 
+      #checa que la contraseña si exista
       - name: Validar credenciales
         if: env.USER_PASS != ''
         run: |
           echo "Estado: Credenciales de usuario y contraseña configuradas correctamente"
 
+      #sale enmascarado xq es un secret, asi debe de ser
       - name: Referencias a var global
         run: |
-          echo "Version del proyecto: ${{ vars.PROJECT_VERSION }}"
+          echo "Version del proyecto: ${{ secrets.PROJECT_VERSION }}"
