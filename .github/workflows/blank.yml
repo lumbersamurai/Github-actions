@@ -46,8 +46,19 @@ jobs:
       - name: Mostrar mensaje inicial
         run: echo "Hola mundo y hola tonotos"
 
+      #Run de mensajes para las variables de entorno
       - name: Auditoria de variables de entorno
         run: |
           echo "Plataforma de despliegue: ${{ env.platform }}"
           echo "Región de despliegue: ${{ env.region }}"
           echo "Cuenta de despliegue: ${{ env.account_id }}"
+      
+      #Run de pasos condicinales para AWS
+      - name: Paso solo para AWS
+        if: env.platform == 'aws'
+        run: echo "Este paso solo se ejecuta si la plataforma es AWS"
+
+      #Run de pasos para Azure
+      - name: Paso solo para Azure
+        if: env.platform == 'azure'
+        run: echo "Este paso solo se ejecuta si la plataforma es Azure"
