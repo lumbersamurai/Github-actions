@@ -62,3 +62,11 @@ jobs:
       - name: Paso solo para Azure
         if: env.platform == 'azure'
         run: echo "Este paso solo se ejecuta si la plataforma es Azure"
+
+      - name: Show Metadatos Basicos
+        run: |
+          echo "Usuuario ejecutor: ${{ github.actor }}"
+          echo "Repo activo: ${{ github.repository }}"
+
+      - name: Debug del payload completo
+        run: echo "${{toJSON(github.event)}}"
